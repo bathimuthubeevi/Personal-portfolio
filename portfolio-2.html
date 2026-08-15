@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bathimuthu Beevi M — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b0d14;
+    --panel:#12151f;
+    --panel-2:#171b28;
+    --line:#242938;
+    --text:#edeae3;
+    --muted:#8a8fa3;
+    --xp:#e7b34c;
+    --xp-dim:#5a4a2a;
+    --rank:#9b8cff;
+    --ok:#5eead4;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter',sans-serif;
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+  ::selection{background:var(--xp);color:#0b0d14;}
+
+  .grid-overlay{
+    position:fixed;inset:0;pointer-events:none;z-index:0;
+    background-image:
+      linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size:48px 48px;
+  }
+
+  .wrap{max-width:920px;margin:0 auto;padding:0 24px;position:relative;z-index:1;}
+
+  header.hud{
+    padding-top:64px;
+    padding-bottom:48px;
+  }
+
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    letter-spacing:2px;
+    color:var(--ok);
+    text-transform:uppercase;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:20px;
+    opacity:0;
+    animation:fadeUp .6s ease forwards;
+  }
+  .eyebrow .dot{
+    width:7px;height:7px;border-radius:50%;background:var(--ok);
+    box-shadow:0 0 8px var(--ok);
+    animation:pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.35;}}
+
+  .charsheet{
+    background:linear-gradient(160deg, var(--panel), var(--panel-2));
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:36px;
+    position:relative;
+    overflow:hidden;
+    opacity:0;
+    animation:fadeUp .7s ease .1s forwards;
+  }
+  .charsheet::before{
+    content:"";
+    position:absolute;top:0;left:0;right:0;height:2px;
+    background:linear-gradient(90deg, transparent, var(--xp), var(--rank), transparent);
+  }
+
+  .cs-top{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:20px;}
+
+  h1{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;
+    font-size:clamp(32px, 5vw, 46px);
+    letter-spacing:-0.5px;
+    line-height:1.1;
+  }
+  .class-tag{
+    font-family:'JetBrains Mono',monospace;
+    font-size:14px;
+    color:var(--xp);
+    margin-top:8px;
+  }
+
+  .level-badge{
+    font-family:'JetBrains Mono',monospace;
+    text-align:right;
+    flex-shrink:0;
+  }
+  .level-badge .num{
+    font-size:38px;
+    font-weight:700;
+    color:var(--rank);
+    line-height:1;
+  }
+  .level-badge .label{
+    font-size:11px;
+    color:var(--muted);
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    margin-top:4px;
+  }
+
+  .xp-row{margin-top:28px;}
+  .xp-labels{
+    display:flex;justify-content:space-between;
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    color:var(--muted);
+    margin-bottom:6px;
+    letter-spacing:1px;
+  }
+  .xp-track{
+    height:10px;
+    background:#1a1d29;
+    border-radius:6px;
+    overflow:hidden;
+    border:1px solid var(--line);
+  }
+  .xp-fill{
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg, var(--xp-dim), var(--xp));
+    border-radius:6px;
+    animation:fillXP 1.4s cubic-bezier(.2,.8,.2,1) .6s forwards;
+  }
+  @keyframes fillXP{to{width:78%;}}
+
+  .contact-row{
+    display:flex;flex-wrap:wrap;gap:18px;
+    margin-top:28px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:13px;
+    color:var(--muted);
+  }
+  .contact-row a{color:var(--muted);text-decoration:none;border-bottom:1px dotted var(--line);}
+  .contact-row a:hover{color:var(--ok);border-color:var(--ok);}
+
+  @keyframes fadeUp{
+    from{opacity:0;transform:translateY(14px);}
+    to{opacity:1;transform:translateY(0);}
+  }
+
+  /* section shell */
+  section{padding:56px 0;border-top:1px solid var(--line);}
+  .sec-head{
+    display:flex;align-items:baseline;gap:14px;margin-bottom:28px;
+  }
+  .sec-num{
+    font-family:'JetBrains Mono',monospace;
+    color:var(--rank);
+    font-size:13px;
+  }
+  h2{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:24px;
+    font-weight:600;
+  }
+
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease;}
+  .reveal.in{opacity:1;transform:translateY(0);}
+
+  p.lede{color:var(--muted);font-size:16px;max-width:640px;}
+
+  /* quest log — projects */
+  .quest{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:24px;
+    margin-bottom:16px;
+    position:relative;
+  }
+  .quest-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;}
+  .quest h3{font-family:'Space Grotesk',sans-serif;font-size:19px;font-weight:600;}
+  .status{
+    font-family:'JetBrains Mono',monospace;
+    font-size:10.5px;
+    letter-spacing:1px;
+    padding:4px 10px;
+    border-radius:20px;
+    white-space:nowrap;
+    text-transform:uppercase;
+  }
+  .status.complete{background:rgba(94,234,212,0.1);color:var(--ok);border:1px solid rgba(94,234,212,0.3);}
+  .status.progress{background:rgba(231,179,76,0.1);color:var(--xp);border:1px solid rgba(231,179,76,0.3);}
+
+  .quest .stack{
+    display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;
+  }
+  .stack span{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    color:var(--muted);
+    background:var(--panel-2);
+    border:1px solid var(--line);
+    padding:3px 9px;
+    border-radius:5px;
+  }
+  .quest ul{margin-top:14px;padding-left:18px;color:var(--muted);font-size:14.5px;}
+  .quest li{margin-bottom:5px;}
+  .quest li::marker{color:var(--rank);}
+
+  /* achievement — internship */
+  .achievement{
+    display:flex;gap:18px;align-items:flex-start;
+    background:linear-gradient(120deg, rgba(231,179,76,0.06), transparent);
+    border:1px solid rgba(231,179,76,0.25);
+    border-radius:10px;
+    padding:22px 24px;
+  }
+  .ach-icon{
+    font-family:'JetBrains Mono',monospace;
+    font-size:22px;
+    color:var(--xp);
+    background:var(--panel-2);
+    border:1px solid var(--line);
+    width:46px;height:46px;
+    display:flex;align-items:center;justify-content:center;
+    border-radius:8px;
+    flex-shrink:0;
+  }
+  .achievement h3{font-family:'Space Grotesk',sans-serif;font-size:18px;margin-bottom:2px;}
+  .achievement .org{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--xp);margin-bottom:10px;}
+  .achievement p{color:var(--muted);font-size:14.5px;margin-bottom:6px;}
+
+  /* skill tree */
+  .tree-group{margin-bottom:26px;}
+  .tree-group h4{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    color:var(--muted);
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    margin-bottom:12px;
+  }
+  .node-row{display:flex;flex-wrap:wrap;gap:10px;}
+  .node{
+    font-family:'JetBrains Mono',monospace;
+    font-size:13px;
+    padding:8px 14px;
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:7px;
+    color:var(--text);
+    display:flex;align-items:center;gap:8px;
+    transition:border-color .2s, transform .2s;
+  }
+  .node:hover{border-color:var(--rank);transform:translateY(-2px);}
+  .node .pip{width:6px;height:6px;border-radius:50%;background:var(--ok);}
+
+  /* education timeline */
+  .edu-item{
+    border-left:2px solid var(--line);
+    padding-left:22px;
+    padding-bottom:26px;
+    position:relative;
+  }
+  .edu-item:last-child{padding-bottom:0;}
+  .edu-item::before{
+    content:"";
+    position:absolute;left:-6px;top:2px;
+    width:10px;height:10px;border-radius:50%;
+    background:var(--bg);border:2px solid var(--rank);
+  }
+  .edu-item .years{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);}
+  .edu-item h3{font-family:'Space Grotesk',sans-serif;font-size:17px;margin-top:4px;}
+  .edu-item .school{color:var(--muted);font-size:14px;margin-top:2px;}
+  .edu-item .score{
+    display:inline-block;margin-top:8px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:11.5px;color:var(--ok);
+    background:rgba(94,234,212,0.08);
+    border:1px solid rgba(94,234,212,0.25);
+    padding:3px 9px;border-radius:5px;
+  }
+
+  footer{
+    padding:48px 0 64px;
+    text-align:center;
+  }
+  footer .cta{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:22px;
+    font-weight:600;
+    margin-bottom:16px;
+  }
+  footer .muted{color:var(--muted);font-size:14px;}
+  footer a.mail{
+    display:inline-block;margin-top:18px;
+    font-family:'JetBrains Mono',monospace;
+    color:var(--xp);
+    border:1px solid rgba(231,179,76,0.35);
+    padding:10px 22px;border-radius:8px;
+    text-decoration:none;
+    transition:background .2s;
+  }
+  footer a.mail:hover{background:rgba(231,179,76,0.1);}
+
+  @media(max-width:600px){
+    .cs-top{flex-direction:column;}
+    .level-badge{text-align:left;}
+    .charsheet{padding:24px;}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important;transition:none !important;}
+    .reveal{opacity:1;transform:none;}
+  }
+
+  a:focus-visible, .node:focus-visible{outline:2px solid var(--ok);outline-offset:2px;}
+</style>
+</head>
+<body>
+<div class="grid-overlay"></div>
+<div class="wrap">
+
+  <header class="hud">
+    <div class="eyebrow"><span class="dot"></span> STATUS: AVAILABLE FOR OPPORTUNITIES</div>
+    <div class="charsheet">
+      <div class="cs-top">
+        <div>
+          <h1>Bathimuthu Beevi M</h1>
+          <div class="class-tag">Aspiring Python &amp; Django Developer</div>
+        </div>
+        <div class="level-badge">
+          <div class="num" style="font-size:22px;">B.Sc. Computer Science</div>
+          <div class="label">3rd Year</div>
+        </div>
+      </div>
+
+      <div class="xp-row">
+        <div class="xp-labels"><span>PROGRESS TO GRADUATION</span><span>2024 — 2027</span></div>
+        <div class="xp-track"><div class="xp-fill"></div></div>
+      </div>
+
+      <div class="contact-row">
+        <a href="tel:+918925419123">+91 89254 19123</a>
+        <a href="mailto:bathimuthubeevi1816@gmail.com">bathimuthubeevi1816@gmail.com</a>
+        <span>Tambaram, Chennai, Tamil Nadu</span>
+      </div>
+
+      <div class="contact-row" style="margin-top:14px;">
+        <a href="https://www.linkedin.com/in/m-bathimuthu-beevi-17601a391" target="_blank" rel="noopener noreferrer">↗ LinkedIn</a>
+        <a href="https://github.com/bathimuthubeevi" target="_blank" rel="noopener noreferrer">↗ GitHub</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="reveal">
+    <div class="sec-head"><span class="sec-num">00</span><h2>Career Objective</h2></div>
+    <p class="lede">B.Sc. Computer Science student with hands-on experience in Python, Django, HTML, and CSS through academic projects and an internship in Python frameworks. Seeking an entry-level Web Developer / Python-Django Developer role or internship where I can apply my project experience, continue building my technical skills, and contribute effectively as part of a development team.</p>
+  </section>
+
+  <section class="reveal">
+    <div class="sec-head"><span class="sec-num">01</span><h2>Internship Experience</h2></div>
+    <div class="achievement">
+      <div class="ach-icon">⌁</div>
+      <div>
+        <h3>Advanced Python Framework Intern</h3>
+        <div class="org">NexGen Innovator Solutions</div>
+        <p>Completed a hands-on internship focused on advanced Python frameworks, gaining practical experience with Python and Django in a real-world project environment.</p>
+        <p>Applied core web application development concepts learned during the internship to personal projects.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="reveal">
+    <div class="sec-head"><span class="sec-num">02</span><h2>Projects</h2></div>
+
+    <div class="quest">
+      <div class="quest-top">
+        <h3>Gamified Habit Tracker</h3>
+        <span class="status progress">In Progress</span>
+      </div>
+      <p style="color:var(--muted);font-size:14.5px;margin-top:6px;">A Django web application that helps users build consistent habits by applying game mechanics — XP, levels, streaks, and achievements — to everyday habit tracking.</p>
+      <div class="stack"><span>Python</span><span>Django 5.1.4</span><span>HTML</span><span>CSS</span><span>SQLite</span></div>
+      <ul>
+        <li>Built with a multi-app Django architecture separating accounts, habits, gamification, and journaling logic</li>
+        <li>Implemented a gamification engine that tracks XP, levels, streaks, and unlockable achievements</li>
+        <li>Designed a glassmorphism-styled dark/light UI for the interface</li>
+      </ul>
+    </div>
+
+    <div class="quest">
+      <div class="quest-top">
+        <h3>Student Performance Analyzer</h3>
+        <span class="status progress">In Progress</span>
+      </div>
+      <p style="color:var(--muted);font-size:14.5px;margin-top:6px;">A Python command-line tool that takes in a student's subject marks, calculates the average, assigns a grade, and generates study recommendations based on performance.</p>
+      <div class="stack"><span>Python</span><span>CLI</span></div>
+    </div>
+
+    <div class="quest">
+      <div class="quest-top">
+        <h3>Glassmorphism Login Form</h3>
+        <span class="status complete">Complete</span>
+      </div>
+      <p style="color:var(--muted);font-size:14.5px;margin-top:6px;">A self-contained login form interface with floating labels and subtle animation, built entirely with HTML and CSS and no external dependencies.</p>
+      <div class="stack"><span>HTML</span><span>CSS</span></div>
+    </div>
+  </section>
+
+  <section class="reveal">
+    <div class="sec-head"><span class="sec-num">03</span><h2>Technical Skills</h2></div>
+
+    <div class="tree-group">
+      <h4>Technical Skills</h4>
+      <div class="node-row">
+        <div class="node"><span class="pip"></span>Python</div>
+        <div class="node"><span class="pip"></span>Django</div>
+        <div class="node"><span class="pip"></span>HTML</div>
+        <div class="node"><span class="pip"></span>CSS</div>
+        <div class="node"><span class="pip"></span>SQLite</div>
+      </div>
+    </div>
+
+    <div class="tree-group">
+      <h4>Soft Skills</h4>
+      <div class="node-row">
+        <div class="node"><span class="pip"></span>Teamwork</div>
+        <div class="node"><span class="pip"></span>Collaboration</div>
+        <div class="node"><span class="pip"></span>Leadership</div>
+        <div class="node"><span class="pip"></span>Communication</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="reveal">
+    <div class="sec-head"><span class="sec-num">04</span><h2>Education</h2></div>
+
+    <div class="edu-item">
+      <div class="years">2024 — 2027</div>
+      <h3>B.Sc. Computer Science</h3>
+      <div class="school">New Prince Shri Bhavani Arts and Science College, Medavakkam</div>
+      <span class="score">3rd year · currently pursuing</span>
+    </div>
+
+    <div class="edu-item">
+      <div class="years">2022 — 2024</div>
+      <h3>Higher Secondary Course</h3>
+      <div class="school">Tambaram Municipal Higher Secondary School, Selaiyur</div>
+      <span class="score">64%</span>
+    </div>
+  </section>
+
+  <footer class="reveal">
+    <div class="cta">Let's connect.</div>
+    <div class="muted">Open to entry-level Web Developer / Python-Django Developer roles and internships.</div>
+    <a class="mail" href="mailto:bathimuthubeevi1816@gmail.com">bathimuthubeevi1816@gmail.com →</a>
+  </footer>
+
+</div>
+
+<script>
+  const observer = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){ e.target.classList.add('in'); }
+    });
+  },{threshold:0.12});
+  document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+</script>
+</body>
+</html>
